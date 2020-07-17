@@ -45,7 +45,7 @@ do
 
   macs2 callpeak -t K4m1/K4m1-${ID}_R1.fastq.gz.sort.rmdup.bam \
   -c input/input-${ID}_R1.fastq.gz.sort.rmdup.bam \
-  --broad
+  --broad \
   -f BAM \
   -g hs \
   -n ${ID}_K4m1 \
