@@ -1,5 +1,5 @@
 # Epigenetic profiling of different MSC cells
-How does chromatin remodeling explain disaparities in chondro/osteogenic potential among different mesenchymal stromal cells?
+Can chromatin remodeling explain disaparities in chondro/osteogenic potential among different tissue-derived mesenchymal stromal cells?
 
 Epigenetic profiles of undifferentiated  MSCs isolated from bone marrow, adipose, and umbilical
 cord were compared with chondrocytes and fibroblasts. 
