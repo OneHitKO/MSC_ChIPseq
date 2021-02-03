@@ -41,7 +41,26 @@ motif.tbl$perc_targets = as.double(str_replace(motif.tbl$perc_targets,
 motif.tbl$perc_bg = as.double(str_replace(motif.tbl$perc_bg,
                                           pattern = "%", replacement = ""))
 
-tail(motif.tbl)
+# create fold over bg column 
+motif.tbl$fold = motif.tbl$perc_targets/motif.tbl$perc_bg
+
+# reformat motif column to motif, family (study not necessary)
+motif.tbl = separate(motif.tbl, motif, into = c("Motif","Family"),
+                     sep = "\\(|\\)")
+
+
+# practice plot
+p1 = filter(motif.tbl, fold >= 2, q_val < 0.01) %>%
+ggplot(., aes(fold, -(log_p_val)))+
+       geom_point(aes(color = Family, size = perc_targets))+
+       theme_bw()+
+       facet_wrap(vars(ATAC), scales = "free_y")+
+       theme(axis.text.y = element_text(size = 8),
+             panel.grid = element_blank(),
+             legend.box = "vertical")+
+       scale_y_continuous(labels = function(x) format(x,scientific = T))
+
+ggsave(plot = p1, filename = "../plots/motif_freq.png", height = 7, width = 7)
 
 
 
