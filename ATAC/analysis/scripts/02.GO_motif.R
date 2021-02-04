@@ -40,6 +40,7 @@ for (i in seq_along(motif.list)){
   motifnames = vector("character", length(motif.list[[i]]))
 
   for (j in seq_along(motif.list[[i]])){
+    
     # add name of motif by getting a matrix of split strings
     motifnames[j] = str_split_fixed(motif.list[[i]][[j]]$`Motif Name`,
                                     pattern = ":|/", n = 2)[1,2]
@@ -47,9 +48,49 @@ for (i in seq_along(motif.list)){
            
   # rename nested list
   names(motif.list[[i]]) = motifnames
-
 }
 
-motif.list[2]
+#-- subset granges which contain specific motifs --#
+
+GR.motifs = vector("list", length = 5)
+names(GR.motifs) = names(motif.list)
+
+for (i in seq_along(GR.motifs)){
+  
+  # initialize the nested list
+  GR.motifs[[i]] = vector("list", length(motif.list[[i]]))
+  names(GR.motifs[[i]]) = names(motif.list[[i]])
+
+  # subset granges, probably a better way to do this
+  for (j in seq_along(motif.list[[i]])){
+    GR.motifs[[i]][[j]] = peaks.list[[i]][mcols(peaks.list[[i]])$name %in% motif.list[[i]][[j]]$PositionID]
+   } 
+}
+
+#-- subset motif-specific, cell-specifc granges with k27ac --# 
+
+# first import reproducible narrow peaks (called by genrich)
+dir = "../../../CHIP/peaks/reproPeaks/" 
+ 
+k27ac.files = list.files(path=dir, pattern="_K27ac.bed$", recursive=T,
+                       full.names=T)
+
+k27ac.list = purrr::map(k27ac.files, ~ rtracklayer::import(.,format="narrowPeak"))
+
+names(k27ac.list)=str_extract(k27ac.files, pattern ="[:upper:]{2,3}" )
+
+names(k27ac.list)
 
 
+
+#-- combine +k27ac and -k27ac lists --#
+
+
+
+
+#-- annotate --# 
+
+
+
+
+#-- create function --# 
