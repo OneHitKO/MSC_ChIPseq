@@ -5,6 +5,7 @@
 
 # load libraries
 library("tidyverse")
+library("ggrepel")
 
 ##-- create list of "known motif" homer results of unique peaks --##
 dir = "~/work/msc/ATAC/results_homer/"
@@ -48,19 +49,30 @@ motif.tbl$fold = motif.tbl$perc_targets/motif.tbl$perc_bg
 motif.tbl = separate(motif.tbl, motif, into = c("Motif","Family"),
                      sep = "\\(|\\)")
 
+##########
+saveRDS(motif.tbl,"./inter_rds/01.motif.tbl.rds")
 
-# practice plot
-p1 = filter(motif.tbl, fold >= 2, q_val < 0.01) %>%
+motif.tbl = readRDS("./inter_rds/01.motif.tbl.rds")
+#########
+
+# plot only motifs that are very significant, ie p val < 1e-50 (or log_p < -116)
+filter(motif.tbl, fold > 2, log_p_val < -116) %>%
 ggplot(., aes(fold, -(log_p_val)))+
-       geom_point(aes(color = Family, size = perc_targets))+
+       geom_point(aes(color = Family, size = perc_targets), alpha = 0.8)+
        theme_bw()+
        facet_wrap(vars(ATAC), scales = "free_y")+
        theme(axis.text.y = element_text(size = 8),
              panel.grid = element_blank(),
              legend.box = "vertical")+
-       scale_y_continuous(labels = function(x) format(x,scientific = T))
-
-ggsave(plot = p1, filename = "../plots/motif_freq.png", height = 7, width = 7)
+       scale_y_continuous(labels = function(x) format(x,scientific = T))+
+       scale_color_brewer(type = "qual", palette = "Dark2")+
+       geom_text_repel(aes(label = Motif), 
+                       max.overlaps = 20,
+                       size = 3,
+                       segment.alpha = 0.25,
+                       force = 2)+
+       labs(x = "Fold Change over Background", y = "- log10 (p-value)",
+            title = "Known Motifs Enriched in Unique ATAC-seq Peaks")
 
 
 
