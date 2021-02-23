@@ -63,6 +63,4 @@ names(contrast.list) = c("BM.vs.FB", "BM.vs.UC", "BM.vs.WAT",
 #-- analyze k27ac
 k27ac.contrast.list = purrr::map(contrast.list, ~ dba.analyze(.x))
 
-######
-saveRDS(k27ac.contrast.list, "./rds/k27ac.contrast.list.rds")
-k27ac.contrast.list = readRDS("./rds/k27ac.contrast.list.rds")
+
