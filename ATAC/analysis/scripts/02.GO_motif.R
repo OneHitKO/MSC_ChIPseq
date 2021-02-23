@@ -82,14 +82,6 @@ k27ac.list = purrr::map(k27ac.files, ~ rtracklayer::import(.,format="narrowPeak"
 
 names(k27ac.list)=str_extract(k27ac.files, pattern ="[:upper:]{2,3}_K27ac")
 
-####################
-saveRDS(k27ac.list, "./inter_rds/02.k27ac.list.rds")
-saveRDS(GR.motifs, "./inter_rds/02.GR.motifs.rds")
-
-k27ac.list = readRDS("./inter_rds/02.k27ac.list.rds")
-GR.motifs = readRDS("./inter_rds/02.GR.motifs.rds")
-####################
-
 # create functions to use w/ map or lapply
 # add a new column to metadata of granges
 add_mcol = function(gr_obj,col_name,value){
