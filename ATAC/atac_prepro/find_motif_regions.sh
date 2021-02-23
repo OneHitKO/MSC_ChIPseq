@@ -4,39 +4,41 @@
 #SBATCH --ntasks=20
 #SBATCH --mem=60G
 #SBATCH --time=20:00:00
-#SBATCH --output=motif2.stout
-#SBATCH --error=motif2.stderr
+#SBATCH --job-name="get regions"
+#SBATCH --output=logs/knownRegions.stdout
+#SBATCH --error=logs/knownRegions.stderr
 #SBATCH --export=ALL
 
+# This script retrieves the peak IDs of de novo Homer motifs identified from
+# unique ATAC seq peaks
+# Use as sbatch from msc/ATAC folder (so all logs in one place)
+
+# config
 source /fast/users/ouk_c/.bashrc
 module load gcc
 conda init bash
 conda activate ng
 
-# Use this script to get the top 25 motifs from unique ATAC peaks w/ or w/o  K27ac 
-cd ~/work/msc/ATAC/genrich/peaks/auc200
+# set paths
+cd ~/work/msc/ATAC/
+bed="./peaks/uniquePeaks"
 
-for value in {1..25}
+# loop through all homer results
+for results in ./results_homer/*/
 do
-  echo known${value}.motif
-
-  # uniqueBM w/ k27ac
-  findMotifsGenome.pl uniqueBM_vs_MSC_K27ac.bed hg19 homer/uniqueBM_vs_MSC_K27ac/ \
-    -find homer/uniqueBM_vs_MSC_K27ac/knownResults/known${value}.motif \
-    > motif_regions_byK27ac/known${value}.uniqueBM_K27ac.txt
+ # create new folder with peaks
+ mkdir -p ${results}/homerRegions/
+ 
+ # get cell type name of homer results folder
+ cell=`echo $results | cut -d'/' -f 3`
   
-  # uniqueBM w/ NO k27ac
-  findMotifsGenome.pl uniqueBM_vs_MSC_noK27ac.bed hg19 homer/uniqueBM_vs_MSC_noK27ac/ \
-    -find homer/uniqueBM_vs_MSC_noK27ac/knownResults/known${value}.motif \
-    > motif_regions_byK27ac/known${value}.uniqueBM_noK27ac.txt
-
-  # uniqueWAT w/ k27ac
-  findMotifsGenome.pl uniqueWAT_vs_MSC_K27ac.bed hg19 homer/uniqueWAT_vs_MSC_K27ac/ \
-    -find homer/uniqueWAT_vs_MSC_K27ac/knownResults/known${value}.motif \
-    > motif_regions_byK27ac/known${value}.uniqueWAT_K27ac.txt
-
-  #findMotifsGenome.pl uniqueWAT_vs_MSC_noK27ac.bed hg19 homer/uniqueWAT_vs_MSC_noK27ac/ \
-    -find homer/uniqueWAT_vs_MSC_noK27ac/knownResults/known${value}.motif \
-    > motif_regions_byK27ac/known${value}.uniqueWAT_noK27ac.txt
+ # find regions in top 5 de novo motifs
+ for value in {1..5}
+ do
+   findMotifsGenome.pl ${bed}/${cell}.narrowPeak hg19 $results \
+     -find ${results}/homerResults/motif${value}.motif \
+     > ${results}/homerRegions/${cell}_motif${value}.txt
+ done
 
 done
+
