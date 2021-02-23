@@ -49,12 +49,6 @@ motif.tbl$fold = motif.tbl$perc_targets/motif.tbl$perc_bg
 motif.tbl = separate(motif.tbl, motif, into = c("Motif","Family"),
                      sep = "\\(|\\)")
 
-##########
-saveRDS(motif.tbl,"./inter_rds/01.motif.tbl.rds")
-
-motif.tbl = readRDS("./inter_rds/01.motif.tbl.rds")
-#########
-
 # plot only motifs that are very significant, ie p val < 1e-50 (or log_p < -116)
 filter(motif.tbl, fold > 2, log_p_val < -116) %>%
 ggplot(., aes(fold, -(log_p_val)))+
@@ -73,13 +67,4 @@ ggplot(., aes(fold, -(log_p_val)))+
                        force = 2)+
        labs(x = "Fold Change over Background", y = "- log10 (p-value)",
             title = "Known Motifs Enriched in Unique ATAC-seq Peaks")
-
-
-
-
-
-
-
-
-
 
