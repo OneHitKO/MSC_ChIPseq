@@ -33,11 +33,11 @@ hg19="../../deeptools/hg19.blacklist.bed"
 # get comma separated list of BM bam files
 BM=`echo ${bamdir}/BM* | tr ' ' ,`
 
-#Genrich -t $BM \
-#  -o reproPeaks/BM_ATAC.narrowPeak \
-#  -e chrY -E $hg19 \
-#  -j -q 0.05 -a 20 -v
-#
+Genrich -t $BM \
+  -o reproPeaks/BM_ATAC.narrowPeak \
+  -e chrY -E $hg19 \
+  -j -q 0.05 -a 20 -v
+
 ## == CH == ##
 CH=`echo ${bamdir}/CH* | tr ' ' ,`
 
@@ -48,12 +48,12 @@ Genrich -t $CH \
 
 ## == FB == ##
 FB=`echo ${bamdir}/FB* | tr ' ' ,`
-#
-#Genrich -t $FB \
-#  -o reproPeaks/FB_ATAC.narrowPeak \
-#  -e chrY -E $hg19 \
-#  -j -q 0.05 -a 200 -v
-#
+
+Genrich -t $FB \
+  -o reproPeaks/FB_ATAC.narrowPeak \
+  -e chrY -E $hg19 \
+  -j -q 0.05 -a 200 -v
+
 ## == UC == ##
 UC=`echo ${bamdir}/UC* | tr ' ' ,`
 
@@ -64,9 +64,9 @@ Genrich -t $UC \
 
 ## == WAT == ##
 WAT=`echo ${bamdir}/WAT* | tr ' ' ,`
-#
-#Genrich -t $WAT \
-#  -o reproPeaks/WAT_ATAC.narrowPeak \
-#  -e chrY -E $hg19 \
-#  -j -q 0.05 -a 200 -v
-#  
+
+Genrich -t $WAT \
+  -o reproPeaks/WAT_ATAC.narrowPeak \
+  -e chrY -E $hg19 \
+  -j -q 0.05 -a 200 -v
+  
